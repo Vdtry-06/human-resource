@@ -1,4 +1,4 @@
-package com.spring.human.resource.server.entity;
+package com.spring.human.resource.server.entities;
 
 import com.spring.human.lib.enumerated.SystemRole;
 import jakarta.persistence.*;
