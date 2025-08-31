@@ -1,4 +1,4 @@
-package com.spring.human.resource.lib.enumerated;
+package com.spring.human.lib.enumerated;
 
 public enum EmployeeStatus {
     DEFAULT,
