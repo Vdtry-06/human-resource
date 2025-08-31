@@ -1,6 +1,6 @@
 package com.spring.human.resource.server.entity;
 
-import com.spring.human.resource.lib.enumerated.EmployeeStatus;
+import com.spring.human.lib.enumerated.EmployeeStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;

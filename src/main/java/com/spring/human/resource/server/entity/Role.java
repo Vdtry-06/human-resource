@@ -1,6 +1,6 @@
 package com.spring.human.resource.server.entity;
 
-import com.spring.human.resource.lib.enumerated.SystemRole;
+import com.spring.human.lib.enumerated.SystemRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
