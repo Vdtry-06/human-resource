@@ -2,6 +2,9 @@ package com.spring.human.resource.server.controllers;
 
 
 import com.spring.human.lib.api.ApiResponse;
+import com.spring.human.lib.api.PaginationResponse;
+import com.spring.human.lib.utils.PagingUtil;
+import com.spring.human.lib.utils.StringUtil;
 import com.spring.human.resource.server.payload.position.PositionRequest;
 import com.spring.human.resource.server.payload.position.PositionResponse;
 import com.spring.human.resource.server.services.PositionService;
@@ -13,6 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/positions")
 public class PositionController {
     private final PositionService positionService;
+
+    @GetMapping
+    public PaginationResponse<PositionResponse> getAllPositionWithConditions(
+            @RequestParam(required = false, defaultValue = PagingUtil.DEFAULT_PAGE) int page,
+            @RequestParam(required = false, defaultValue = PagingUtil.DEFAULT_SIZE) int perpage,
+            @RequestParam(required = false, defaultValue = StringUtil.EMPTY) String search ) {
+        return positionService.getPositionWithConditions(page, perpage, search);
+    }
 
     @GetMapping("/{id}")
     public ApiResponse<PositionResponse> getPositionById(@PathVariable("id") int id) {
