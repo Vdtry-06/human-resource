@@ -1,7 +1,9 @@
 package com.spring.human.resource.server.services;
 
+import com.spring.human.lib.api.PaginationResponse;
 import com.spring.human.lib.repository.BaseRepository;
 import com.spring.human.lib.service.BaseService;
+import com.spring.human.lib.utils.PagingUtil;
 import com.spring.human.resource.server.entities.Position;
 import com.spring.human.resource.server.payload.position.PositionRequest;
 import com.spring.human.resource.server.payload.position.PositionResponse;
@@ -10,7 +12,10 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class PositionService extends BaseService<Position, Integer> {
@@ -22,6 +27,28 @@ public class PositionService extends BaseService<Position, Integer> {
     protected PositionService(BaseRepository<Position, Integer> repository) {
         super(repository);
         this.repository = (PositionRepository) repository;
+    }
+
+    public PaginationResponse<PositionResponse> getPositionWithConditions(int page, int perpage, String search) {
+        // tổng số bản ghi tìm kiếm
+        long totalRecord = repository.countAllPositionWithConditions(search);
+        // vị trí bắt đầu lấy dữ liệu trong SQL
+        int offset = PagingUtil.getOffSet(page, perpage);
+        // tổng số trang
+        int totalPage = PagingUtil.getTotalPage(totalRecord, perpage);
+        List<Position> positionList = repository.findAllPositionsWithConditions(offset, perpage, search);
+        List<PositionResponse> responseList = new ArrayList<>();
+        if (positionList != null) {
+            responseList = positionList.stream().map(position -> responseBuilder(position)).toList();
+        }
+
+        return PaginationResponse.<PositionResponse>builder()
+                .page(page)
+                .prePage(perpage)
+                .data(responseList)
+                .totalPage(totalPage)
+                .totalRecord(totalRecord)
+                .build();
     }
 
     // Chỉ lấy dữ liệu ra khi đọc đúng

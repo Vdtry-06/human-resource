@@ -3,7 +3,7 @@ spring:
     name: human.resource
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:human_resource_management}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:human_resource_management}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
 
