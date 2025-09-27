@@ -4,10 +4,12 @@ import com.spring.human.lib.api.PaginationResponse;
 import com.spring.human.lib.repository.BaseRepository;
 import com.spring.human.lib.service.BaseService;
 import com.spring.human.lib.utils.PagingUtil;
+import com.spring.human.resource.server.configs.language.MessageSourceHelper;
 import com.spring.human.resource.server.entities.Position;
 import com.spring.human.resource.server.payload.position.PositionRequest;
 import com.spring.human.resource.server.payload.position.PositionResponse;
 import com.spring.human.resource.server.repositories.PositionRepository;
+import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,28 +17,30 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class PositionService extends BaseService<Position, Integer> {
     // chỉ đọc (read - only) chỉ gán 1 lần thông qua constructor, không bị thay đổi ở nơi khác
     private final PositionRepository repository;
+    private final MessageSourceHelper messageSourceHelper;
 
     // sẽ tự động inject repository
     // truy cập được trong cùng package, lớp con khác package chỉ được kế thừa
-    protected PositionService(BaseRepository<Position, Integer> repository) {
+    protected PositionService(BaseRepository<Position, Integer> repository, MessageSourceHelper messageSourceHelper) {
         super(repository);
         this.repository = (PositionRepository) repository;
+        this.messageSourceHelper = messageSourceHelper;
     }
 
-    public PaginationResponse<PositionResponse> getPositionWithConditions(int page, int perpage, String search) {
+    public PaginationResponse<PositionResponse> getPositionWithConditions(int page, int prePage, String search) {
         // tổng số bản ghi tìm kiếm
         long totalRecord = repository.countAllPositionWithConditions(search);
         // vị trí bắt đầu lấy dữ liệu trong SQL
-        int offset = PagingUtil.getOffSet(page, perpage);
+        int offset = PagingUtil.getOffSet(page, prePage);
         // tổng số trang
-        int totalPage = PagingUtil.getTotalPage(totalRecord, perpage);
-        List<Position> positionList = repository.findAllPositionsWithConditions(offset, perpage, search);
+        int totalPage = PagingUtil.getTotalPage(totalRecord, prePage);
+        List<Position> positionList = repository.findAllPositionsWithConditions(offset, prePage, search);
         List<PositionResponse> responseList = new ArrayList<>();
         if (positionList != null) {
             responseList = positionList.stream().map(position -> responseBuilder(position)).toList();
@@ -44,7 +48,7 @@ public class PositionService extends BaseService<Position, Integer> {
 
         return PaginationResponse.<PositionResponse>builder()
                 .page(page)
-                .prePage(perpage)
+                .prePage(prePage)
                 .data(responseList)
                 .totalPage(totalPage)
                 .totalRecord(totalRecord)
@@ -86,7 +90,8 @@ public class PositionService extends BaseService<Position, Integer> {
             repository.delete(position);
         } catch (Exception e) {
             // Tự định nghĩa lỗi
-            throw new BadRequestException("Position not found");
+            log.error(messageSourceHelper.getMessage("error.positionNotFound", id));
+            throw new BadRequestException(messageSourceHelper.getMessage("error.positionNotFound", id));
         }
     }
 
