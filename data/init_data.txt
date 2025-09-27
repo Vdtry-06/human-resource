@@ -1,0 +1,92 @@
+-- Thêm dữ liệu vào bảng roles
+INSERT INTO roles (role_id, role_name, description) VALUES
+    (1, 'ADMIN', 'Admin of the system'),
+    (2, 'MANAGER', 'Manager'),
+    (3, 'EMPLOYEE', 'Normal employee');
+
+-- Thêm dữ liệu vào bảng permissions
+INSERT INTO permissions (permission_name, description) VALUES
+    ('read_role', 'Quyền xem thông tin vai trò'),
+    ('create_role', 'Quyền tạo mới vai trò'),
+    ('update_role', 'Quyền cập nhật vai trò'),
+    ('delete_role', 'Quyền xóa vai trò'),
+    ('read_department', 'Quyền xem thông tin phòng ban'),
+    ('create_department', 'Quyền tạo phòng ban mới'),
+    ('update_department', 'Quyền cập nhật phòng ban'),
+    ('delete_department', 'Quyền xóa phòng ban'),
+    ('read_employee', 'Quyền xem thông tin nhân viên'),
+    ('create_employee', 'Quyền tạo nhân viên mới'),
+    ('update_employee', 'Quyền cập nhật thông tin nhân viên'),
+    ('delete_employee', 'Quyền xóa nhân viên'),
+    ('read_permission', 'Quyền xem thông tin quyền hạn'),
+    ('create_permission', 'Quyền tạo quyền hạn mới'),
+    ('update_permission', 'Quyền cập nhật quyền hạn'),
+    ('delete_permission', 'Quyền xóa quyền hạn'),
+    ('read_role_permission', 'Quyền đọc role-permissions'),
+    ('create_role_permission', 'Quyền tạo role-permissions'),
+    ('delete_role_permission', 'Quyền xóa role-permissions'),
+    ('read_user', 'Quyền đọc thông tin người dùng'),
+    ('create_user', 'Quyền tạo người dùng mới'),
+    ('update_user', 'Quyền cập nhật thông tin người dùng'),
+    ('delete_user', 'Quyền xóa người dùng'),
+    ('read_position', 'Quyền xem thông tin chức vụ'),
+    ('create_position', 'Quyền tạo mới chức vụ'),
+    ('update_position', 'Quyền cập nhật thông tin chức vụ'),
+    ('delete_position', 'Quyền xóa chức vụ'),
+	('read_userID', 'Quyền đọc thông tin người dùng qua id');
+
+-- Gán tất cả các quyền cho role ADMIN
+INSERT INTO role_permission (role_id, permission_id)
+SELECT 1, permission_id FROM permissions;
+-- Gán quyền cho từng role
+INSERT INTO role_permission (role_id, permission_id) values
+(1,1),
+(1,2),
+(1,3),
+(1,4),
+(1,5),
+(1,6),
+(1,7),
+(1,8),
+(1,9),
+(1,10),
+(1,11),
+(1,12),
+(1,13),
+(1,14),
+(1,15),
+(1,16),
+(1,17),
+(1,18),
+(1,19),
+(1,20),
+(1,21),
+(1,22),
+(1,23),
+(1,24),
+(1,25),
+(1,26),
+(1,27),
+(2,20),
+(1,28),
+(2,28),
+(3,28),
+(2,21),
+(2,22),
+(3,22);
+
+-- Thêm tài khoản admin vào bảng users
+INSERT INTO users (user_id, email, password, username, role_id) VALUES
+(1, 'trongvdcn866@ptit.edu.vn', '$2a$10$CwijD2owAiFpdM9ISCVQqu.7UwxBDX3k4fE0.tcl15kePoQAeYHb2', 'admin', 1);
+INSERT INTO employees (address, date_of_birth, first_name, hire_date, last_name, phone_number, salary, status, department_id, position_id, user_id)
+VALUES ('Ho Chi Minh, VietNam', '2000-05-15', 'Nguyen', '2025-02-25', 'Van A', '0123456789', 1500.0, 'ACTIVE', null, null, 1);
+
+-- full text idx for users(username, email)
+CREATE INDEX idx_users_name_ft ON public.users USING gin(to_tsvector('english', username));
+CREATE INDEX idx_users_email_ft ON public.users USING gin(to_tsvector('english', email));
+-- full text idx for positions(position_name)
+CREATE INDEX idx_position_name_ft ON public.positions USING gin(to_tsvector('english', position_name));
+-- full text idx for departments(department_name)
+CREATE INDEX idx_department_name_ft ON public.departments USING gin(to_tsvector('english', department_name));
+-- full text idx for permission(permission_name)
+CREATE INDEX idx_permission_name_ft ON public.permissions USING gin(to_tsvector('english', permission_name));
