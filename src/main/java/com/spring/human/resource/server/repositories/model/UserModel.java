@@ -1,0 +1,8 @@
+package com.spring.human.resource.server.repositories.model;
+
+public interface UserModel {
+    int getUserId();
+    String getUsername();
+    String getEmail();
+    String getRoleName();
+}
