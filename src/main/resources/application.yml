@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:human_resource_management}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -13,3 +13,55 @@ spring:
     show-sql: true
     properties:
       hibernate:dialect: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  access-token:
+    expiration: ${ACCESS_TOKEN_EXPIRATION}
+  secret-key: ${JWT_SECRET_KEY}
+  refresh-token:
+    expiration: ${REFRESH_TOKEN_EXPIRATION}
+
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
+  database: ${REDIS_DB}
+  password: ${REDIS_DB_PASSWORD}
+  timeout: ${REDIS_TIMEOUT}
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+  packages-to-scan: com.spring.human.resource.server.controllers
+  paths-to-match: /**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "logfile"
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  file:
+    name: ${LOGGING_FILE_PATH:/app/logs/application.log}
+  level:
+    com.spring.human.resource: ${LOG_LEVEL:INFO}
+    org.springframework.security: WARN
+    org.hibernate.SQL: ${SQL_LOG_LEVEL:WARN}
+    root: INFO
+
+server:
+  port: 8080
+
+# Cấu hình OAuth2 cho Swagger UI
+swagger:
+  oauth2:
+    client-id: ${OAUTH2_CLIENT_ID}
+    client-secret: ${OAUTH2_CLIENT_SECRET}
+    authorization-url: ${OAUTH2_AUTHORIZATION_URL}
+    token-url: ${OAUTH2_TOKEN_URL}
