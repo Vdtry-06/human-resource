@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -58,5 +57,13 @@ public class ApiResponse<T> {
             this.message = "Failed";
         }
         this.data = data;
+    }
+
+    public ApiResponse(boolean status, String message, T data, HttpStatus httpStatus, String moreInformation) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+        this.httpStatus = httpStatus;
+        this.moreInformation = moreInformation;
     }
 }
